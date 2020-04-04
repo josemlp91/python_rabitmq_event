@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: 'rabbitmq:3.6-management-alpine'
+    environment:
+      RABBITMQ_DEFAULT_USER: 'root'
+      RABBITMQ_DEFAULT_PASS: 'toor'
+    ports:
+      # The standard AMQP protocol port
+      - '5672:5672'
+      # HTTP management UI
+      - '15672:15672'
+    networks:
+      - network
+
+  consumer:
+    build: subscriber
+    environment:
+      RABBITMQ_HOST: 'rabbitmq'
+      RABBITMQ_PORT: '5672'
+      RABBITMQ_USER: 'root'
+      RABBITMQ_PASS: 'toor'
+    networks:
+      - network
+    depends_on:
+      - rabbitmq
+
+  publisher:
+    build: publisher
+    environment:
+      RABBITMQ_HOST: 'rabbitmq'
+      RABBITMQ_PORT: '5672'
+      RABBITMQ_USER: 'root'
+      RABBITMQ_PASS: 'toor'
+    networks:
+      - network
+    depends_on:
+      - consumer
+
+networks:
+  network: {}
