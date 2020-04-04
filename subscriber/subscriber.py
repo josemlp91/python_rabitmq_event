@@ -2,6 +2,7 @@ from kombu import Connection, Exchange
 from yosun import Yosun
 import os
 
+from common import AnimalEvent
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST')
 RABBITMQ_PORT = os.getenv('RABBITMQ_PORT')
@@ -22,13 +23,15 @@ yosun = Yosun(connection, exchange)
 
 
 def on_rabbit(body, message):
+    rabbit_event = AnimalEvent(**body)
     print('Look, a rabbit!')
-    print(body)
+    print(rabbit_event)
 
 
 def on_animal(body, message):
+    animal_event = AnimalEvent(**body)
     print('Look, an animal!')
-    print(body)
+    print(animal_event)
 
 
 sub = yosun.subscribe('animals.#')

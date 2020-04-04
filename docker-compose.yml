@@ -21,10 +21,13 @@ services:
       RABBITMQ_PORT: '5672'
       RABBITMQ_USER: 'root'
       RABBITMQ_PASS: 'toor'
+    volumes:
+      - './subscriber:/usr/src/app'
     networks:
       - network
     depends_on:
       - rabbitmq
+    restart: always
 
   publisher:
     build: publisher
@@ -33,10 +36,13 @@ services:
       RABBITMQ_PORT: '5672'
       RABBITMQ_USER: 'root'
       RABBITMQ_PASS: 'toor'
+    volumes:
+      - './publisher:/usr/src/app'
     networks:
       - network
     depends_on:
       - consumer
+    restart: always
 
 networks:
   network: {}
